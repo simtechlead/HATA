@@ -60,14 +60,15 @@ if 'history' not in st.session_state:
 # Streamlit app title
 st.title('HATA Chat Interface')
 
-# Input text box
-user_input = st.text_input("Send a message:", key="input")
+# Use a form to handle input and button as a unit
+with st.form(key='message_form'):
+    user_input = st.text_input("Send a message:")
+    submit_button = st.form_submit_button(label='Send')
 
-# On 'Enter', append the message and get a response
-if user_input:
+# On 'Enter' or button press, append the message and get a response
+if submit_button and user_input:
     # User's message
     st.session_state.history.append({"sender": "You", "message": user_input})
-    st.session_state.input = ""  # Clear input box after sending
 
     # OpenAI's response
     response = send_message(user_input)
