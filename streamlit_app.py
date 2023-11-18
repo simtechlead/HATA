@@ -5,15 +5,13 @@ import time
 
 # Function to send message to OpenAI and get response
 def send_message(message):
-    # Assuming OPENAI_KEY and ORG_ID are set in your Streamlit secrets or environment variables
     openai_key = st.secrets['OPENAI_KEY']
     org_ID = st.secrets['ORG_ID']
 
     client = OpenAI(organization=org_ID, api_key=openai_key)
 
     # Replace 'asst_W9WhhX3DRDu8e0A5T5TjQMup' with your Assistant's ID
-    # This is a placeholder assistant ID and won't work in your code.
-    assistant_id = "asst_W9WhhX3DRDu8e0A5T5TjQMup"
+    assistant_id = "your_actual_assistant_id"
 
     try:
         # Create a new thread
@@ -45,13 +43,19 @@ def send_message(message):
 
         # Retrieve and return responses
         messages = client.beta.threads.messages.list(thread_id=thread.id)
-        responses = [msg.content for msg in messages if msg.role == 'assistant']
+        responses = []
+        for msg in messages:
+            if msg.role == 'assistant':
+                # Assuming the content of the message is in a format that can be cast to string
+                response_text = msg.content if isinstance(msg.content, str) else ', '.join(msg.content)
+                responses.append(response_text)
 
         return "\n".join(responses)
 
     except Exception as e:
         st.error(f"Error: {e}")
         return "I'm sorry, I couldn't fetch a response. Please check the error message above."
+
 
 # Initialize session state for conversation history if not already present
 if 'history' not in st.session_state:
