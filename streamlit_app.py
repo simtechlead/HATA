@@ -9,70 +9,45 @@ st.title('HATA Chat Interface')
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
-    # Placeholder for API interaction code
-    # Simulate a response for demonstration purposes
-    return ["This is a simulated response."]
+    # Placeholder for the actual OpenAI API interaction
+    # ...
 
 # Initialize session state for conversation history if not already present
 if 'history' not in st.session_state:
-    st.session_state.history = []
+    st.session_state.history = [{"role": "assistant", "content": "How may I assist you today?"}]
 
-if 'translation' not in st.session_state:
-    st.session_state.translation = []
+# Display chat messages
+def display_messages():
+    # Create a container for messages and use st.expander to make it scrollable
+    with st.container():
+        for message in reversed(st.session_state.history):  # Display from the bottom up
+            role = "You" if message["role"] == "user" else "HATA"
+            st.markdown(f"**{role}:**")
+            st.text_area("", value=message["content"], height=3, disabled=True, key=f"{role}_{time.time()}")
+            st.markdown("<hr>", unsafe_allow_html=True)  # Horizontal line
 
-if 'phonetics' not in st.session_state:
-    st.session_state.phonetics = []
+# User input form at the bottom
+def chat_input():
+    with st.container():
+        with st.form("chat_form", clear_on_submit=True):
+            user_input = st.text_input("Send a message:", key="input")
+            submit_button = st.form_submit_button(label='Send')
 
-if 'additional_info' not in st.session_state:
-    st.session_state.additional_info = []
+        if submit_button and user_input:
+            st.session_state.history.append({"role": "user", "content": user_input})
+            responses = interact_with_openai(user_input)
+            for response in responses:
+                st.session_state.history.append({"role": "assistant", "content": response})
+            st.experimental_rerun()
 
-# Layout with fixed columns
-col1, col2, col3, col4 = st.columns(4)
+# Layout the chat history and the input area
+display_messages()
+chat_input()
 
-# Chat input and history
-with col1:
-    st.subheader("Chat input:")
-    user_input = st.text_input("Enter your message:", key="chat_input")
-    if st.button('Send', key="send_button"):
-        st.session_state.history.append(user_input)  # Add to chat history
-        responses = interact_with_openai(user_input)  # Get the response
-        st.session_state.translation.append(responses[0])  # Add to translation
-        st.session_state.phonetics.append("Phonetic representation")  # Placeholder
-        st.session_state.additional_info.append("Additional information")  # Placeholder
+# To make sure the latest message is visible, we can use an anchor (a placeholder)
+# and scroll to its location after a new message is added
+if 'anchor' not in st.session_state:
+    st.session_state.anchor = st.empty()
 
-    st.subheader("Chat history:")
-    for message in reversed(st.session_state.history):  # Display from the bottom up
-        st.text(message)
-
-# Translation column
-with col2:
-    st.subheader("Translation:")
-    for translation in st.session_state.translation:
-        st.text(translation)
-
-# Phonetics column
-with col3:
-    st.subheader("Phonetics:")
-    for phonetic in st.session_state.phonetics:
-        st.text(phonetic)
-
-# Additional information column
-with col4:
-    st.subheader("Additional information:")
-    for info in st.session_state.additional_info:
-        st.text(info)
-
-# Clear the input box by rerunning the app to update the conversation history
-if 'rerun' in st.session_state:
-    st.session_state.rerun = False
-    st.experimental_rerun()
-
-# Handle message submission at the end to allow for rerun to clear the input box
-if st.session_state.get('rerun', False):
-    user_input = st.session_state.get('chat_input', '')
-    if user_input:
-        st.session_state.history.append({"role": "user", "content": user_input})
-        responses = interact_with_openai(user_input)
-        for response in responses:
-            st.session_state.history.append({"role": "assistant", "content": response})
-        st.session_state['rerun'] = True  # Set the flag to rerun the app
+st.session_state.anchor.markdown(" ")  # This space will serve as an anchor
+st.script_request_queue.enqueue("scrollTo", {"id": st.session_state.anchor._anchor_id})
