@@ -10,6 +10,9 @@ st.title('Hata : Penerjemah Indonesia-Simalungun')
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
     try:
+        # Prepend a directive to respond in Indonesian
+        user_message = "Respond in Indonesian: " + user_message
+        
         openai_key = os.environ['OPENAI_KEY']
         org_ID = os.environ['ORG_ID']
 
