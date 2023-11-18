@@ -1,1 +1,11 @@
+# Ignore Python byte-compiled files
+__pycache__/
+*.pyc
+
+# Ignore the .env file containing sensitive data
+.env
+
+# Ignore other unnecessary files
+.DS_Store
+*.log
 
