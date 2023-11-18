@@ -46,15 +46,19 @@ def send_message(message):
         responses = []
         for msg in messages:
             if msg.role == 'assistant':
-                # Assuming the content of the message is in a format that can be cast to string
-                response_text = msg.content if isinstance(msg.content, str) else ', '.join(msg.content)
-                responses.append(response_text)
+                # Check if the message content is of the expected type
+                if isinstance(msg.content, dict) and 'text' in msg.content:
+                    responses.append(msg.content['text'])
+                else:
+                    # Handle other types of content or raise an error
+                    responses.append(str(msg.content))
 
         return "\n".join(responses)
 
     except Exception as e:
         st.error(f"Error: {e}")
         return "I'm sorry, I couldn't fetch a response. Please check the error message above."
+
 
 
 # Initialize session state for conversation history if not already present
