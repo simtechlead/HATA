@@ -1,33 +1,44 @@
 import streamlit as st
-from openai import OpenAI
 import os
 import time
+from openai import OpenAI
 
-# Function to send message to OpenAI and get response
-def send_message(message):
-    openai_key = st.secrets['OPENAI_KEY']
-    org_ID = st.secrets['ORG_ID']
+# Initialize session state for conversation history if not already present
+if 'history' not in st.session_state:
+    st.session_state.history = []
 
-    client = OpenAI(organization=org_ID, api_key=openai_key)
+# Streamlit app title
+st.title('HATA Chat Interface')
 
-    # Replace 'asst_W9WhhX3DRDu8e0A5T5TjQMup' with your Assistant's ID
-    assistant_id = "asst_W9WhhX3DRDu8e0A5T5TjQMup"
-
+# Function to interact with OpenAI API
+def interact_with_openai(user_message):
     try:
+        # Retrieve API key and organization ID from Streamlit's settings
+        openai_key = os.environ['OPENAI_KEY']
+        org_ID = os.environ['ORG_ID']
+
+        client = OpenAI(
+            organization=org_ID,
+            api_key=openai_key
+        )
+
+        # Retrieve a specific assistant
+        assistant = client.beta.assistants.retrieve("asst_W9WhhX3DRDu8e0A5T5TjQMup")
+
         # Create a new thread
         thread = client.beta.threads.create()
 
         # Send a message to the thread
-        message_response = client.beta.threads.messages.create(
+        message = client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
-            content=message
+            content=user_message
         )
 
         # Run the assistant
         run = client.beta.threads.runs.create(
             thread_id=thread.id,
-            assistant_id=assistant_id
+            assistant_id=assistant.id
         )
 
         # Wait for completion
@@ -44,63 +55,42 @@ def send_message(message):
         # Retrieve and return responses
         messages = client.beta.threads.messages.list(thread_id=thread.id)
         responses = []
-        for msg in messages:
-            if msg.role == 'assistant':
-                # Check if the message content is of the expected type
-                if isinstance(msg.content, dict) and 'text' in msg.content:
-                    responses.append(msg.content['text'])
-                else:
-                    # Handle other types of content or raise an error
-                    responses.append(str(msg.content))
-
-        return "\n".join(responses)
+        for each in messages:
+            if each.role == 'assistant':
+                responses.append(each.content[0].text.value if isinstance(each.content, list) and hasattr(each.content[0], 'text') else str(each.content))
+        return responses
 
     except Exception as e:
         st.error(f"Error: {e}")
-        return "I'm sorry, I couldn't fetch a response. Please check the error message above."
+        return []
 
+# User input
+user_input = st.text_input("Send a message:", key="input")
 
-
-# Initialize session state for conversation history if not already present
-if 'history' not in st.session_state:
-    st.session_state['history'] = []
-
-# Streamlit app title
-st.title('HATA Chat Interface')
-
-# Use a form to handle input and button as a unit
-with st.form(key='message_form'):
-    user_input = st.text_input("Send a message:")
-    submit_button = st.form_submit_button(label='Send')
-
-# On 'Enter' or button press, append the message and get a response
-if submit_button and user_input:
+# On 'Enter', append the message and get a response
+if user_input:
     # User's message
     st.session_state.history.append({"sender": "You", "message": user_input})
+    st.session_state.input = ""  # Clear input box after sending
 
     # OpenAI's response
-    response = send_message(user_input)
-    st.session_state.history.append({"sender": "HATA", "message": response})
+    with st.spinner('Talking to HATA...'):
+        responses = interact_with_openai(user_input)
+        for response in responses:
+            st.session_state.history.append({"sender": "HATA", "message": response})
 
 # Display conversation history
-for chat in st.session_state.history:
-    # Differentiate between user and HATA's messages
-    if chat["sender"] == "You":
-        st.text_area("", value=chat["message"], key=str(chat["message"] + "_user"), height=75, disabled=True)
+for index, chat in enumerate(st.session_state.history):
+    sender = chat["sender"]
+    message = chat["message"]
+    key = f"{sender}_{index}"
+    if sender == "You":
+        st.text_area("", value=message, key=key, height=75, disabled=True)
     else:
-        st.text_area("", value=chat["message"], key=str(chat["message"] + "_hata"), height=75, disabled=True, style={"text-align": "right", "color": "blue"})
+        st.text_area("", value=message, key=key, height=75, disabled=True)
 
-# Scroll to the last message
+# Ensure the last message is visible
 if st.session_state.history:
     st.session_state.last_message = st.session_state.history[-1]["message"]
     st.text_input("Hidden text input for scrolling", value="", key="scroll_to_bottom", on_change=st.experimental_rerun, args=())
     st.session_state.scroll_to_bottom = st.session_state.last_message  # Trigger scroll
-
-    # JavaScript to scroll to the bottom of the page
-    st.markdown("""
-        <script>
-        const elements = document.getElementsByClassName('stTextInput');
-        const lastElement = elements[elements.length - 1];
-        lastElement.scrollIntoView(false);
-        </script>
-        """, unsafe_allow_html=True)
