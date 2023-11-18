@@ -11,7 +11,7 @@ def send_message(message):
     client = OpenAI(organization=org_ID, api_key=openai_key)
 
     # Replace 'asst_W9WhhX3DRDu8e0A5T5TjQMup' with your Assistant's ID
-    assistant_id = "your_actual_assistant_id"
+    assistant_id = "asst_W9WhhX3DRDu8e0A5T5TjQMup"
 
     try:
         # Create a new thread
