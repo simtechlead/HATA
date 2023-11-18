@@ -64,14 +64,15 @@ def interact_with_openai(user_message):
         st.error(f"Error: {e}")
         return []
 
-# User input
-user_input = st.text_input("Send a message:", key="input")
+# Use a form for user input
+with st.form(key='user_input_form'):
+    user_input = st.text_input("Send a message:")
+    submit_button = st.form_submit_button(label='Send')
 
-# On 'Enter', append the message and get a response
-if user_input:
+# On form submission, append the message and get a response
+if submit_button and user_input:
     # User's message
     st.session_state.history.append({"sender": "You", "message": user_input})
-    st.session_state.input = ""  # Clear input box after sending
 
     # OpenAI's response
     with st.spinner('Talking to HATA...'):
