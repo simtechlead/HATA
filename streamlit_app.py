@@ -47,7 +47,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # React to user input
-if user_input := st.chat_input("Send a message:"):
+if user_input := st.chat_input("Apa yang mau diterjemahkan:"):
     # Display user message in chat message container
     st.chat_message("user").markdown(user_input)
     # Add user message to chat history
