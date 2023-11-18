@@ -40,16 +40,25 @@ def interact_with_openai(user_message):
 # Initialize session state for conversation history if not already present
 if 'history' not in st.session_state:
     st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
+if 'reset_history' not in st.session_state:
+    st.session_state.reset_history = False
+
+# Function to reset conversation history
+def reset_history():
+    st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
+    st.session_state.reset_history = False
 
 # Display chat messages
-for message in st.session_state.history:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+if not st.session_state.reset_history:
+    for message in st.session_state.history:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
 
 # Input form for user message
 with st.form("chat_form", clear_on_submit=True):
     user_input = st.text_input("Send a message:", key="input")
     submit_button = st.form_submit_button(label='Send')
+    reset_button = st.form_submit_button(label='Reset Conversation', on_click=reset_history)
 
 # Handle message submission
 if submit_button and user_input:
@@ -57,6 +66,7 @@ if submit_button and user_input:
     responses = interact_with_openai(user_input)
     for response in responses:
         st.session_state.history.append({"role": "assistant", "content": response})
+    st.session_state.reset_history = True  # Set flag to indicate a response has been received
 
     # Clear the input box by rerunning the app to update the conversation history
     st.experimental_rerun()
