@@ -4,8 +4,8 @@ import time
 from openai import OpenAI
 
 # Set up the page configuration and title
-st.set_page_config(page_title="HATA Chat Interface")
-st.title('HATA Chat Interface')
+st.set_page_config(page_title="HATA")
+st.title('Asisten Penerjemah Indonesia Simalungun')
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
