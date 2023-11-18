@@ -39,7 +39,7 @@ def interact_with_openai(user_message):
 
 # Initialize session state for conversation history if not already present
 if 'history' not in st.session_state:
-    st.session_state.history = [{"role": "assistant", "content": "How may I assist you today?"}]
+    st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
 
 # Display chat messages
 for message in st.session_state.history:
