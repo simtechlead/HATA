@@ -4,8 +4,8 @@ import time
 from openai import OpenAI
 
 # Set up the page configuration and title
-st.set_page_config(page_title="HATA")
-st.title('Asisten Penerjemah Indonesia Simalungun')
+st.set_page_config(page_title="Hata")
+st.title('Hata : Penerjemah Indonesia-Simalungun')
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
