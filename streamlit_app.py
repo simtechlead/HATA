@@ -37,43 +37,27 @@ def interact_with_openai(user_message):
         st.error(f"Error: {e}")
         return []
 
-# Initialize session state for conversation history if not already present
-if 'history' not in st.session_state:
-    st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
-if 'reset_flag' not in st.session_state:
-    st.session_state.reset_flag = False
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Display chat messages
-for message in st.session_state.history:
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.write(message["content"])
+        st.markdown(message["content"])
 
-# Input form for user message
-with st.form("chat_form", clear_on_submit=True):
-    user_input = st.text_input("Send a message:", key="input")
-    submit_button = st.form_submit_button(label='Send')
-    reset_button = st.form_submit_button(label='Reset Conversation')
+# React to user input
+if user_input := st.chat_input("Send a message:"):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(user_input)
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
-# Handle message submission
-if submit_button and user_input:
-    if st.session_state.reset_flag:
-        # Reset history if the flag is set
-        st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
-        st.session_state.reset_flag = False
-
-    st.session_state.history.append({"role": "user", "content": user_input})
+    # Get responses from OpenAI
     responses = interact_with_openai(user_input)
     for response in responses:
-        st.session_state.history.append({"role": "assistant", "content": response})
-
-    # Set flag to reset history on next input
-    st.session_state.reset_flag = True
-
-    # Clear the input box by rerunning the app to update the conversation history
-    st.experimental_rerun()
-
-# Handle reset button
-if reset_button:
-    st.session_state.history = [{"role": "assistant", "content": "kata yang ingin diterjemahkan?"}]
-    st.session_state.reset_flag = False
-    st.experimental_rerun()
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.markdown(response)
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
