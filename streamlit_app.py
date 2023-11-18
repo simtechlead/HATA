@@ -64,9 +64,16 @@ def interact_with_openai(user_message):
         st.error(f"Error: {e}")
         return []
 
-# Use a form for user input
+# Display conversation history
+for index, chat in enumerate(st.session_state.history):
+    sender = chat["sender"]
+    message = chat["message"]
+    key = f"{sender}_{index}"
+    st.text_area("", value=message, key=key, height=75, disabled=True)
+
+# User input form at the bottom
 with st.form(key='user_input_form'):
-    user_input = st.text_input("Send a message:")
+    user_input = st.text_input("Send a message:", key="input")
     submit_button = st.form_submit_button(label='Send')
 
 # On form submission, append the message and get a response
@@ -79,19 +86,6 @@ if submit_button and user_input:
         responses = interact_with_openai(user_input)
         for response in responses:
             st.session_state.history.append({"sender": "HATA", "message": response})
-
-# Display conversation history
-for index, chat in enumerate(st.session_state.history):
-    sender = chat["sender"]
-    message = chat["message"]
-    key = f"{sender}_{index}"
-    if sender == "You":
-        st.text_area("", value=message, key=key, height=75, disabled=True)
-    else:
-        st.text_area("", value=message, key=key, height=75, disabled=True)
-
-# Ensure the last message is visible
-if st.session_state.history:
-    st.session_state.last_message = st.session_state.history[-1]["message"]
-    st.text_input("Hidden text input for scrolling", value="", key="scroll_to_bottom", on_change=st.experimental_rerun, args=())
-    st.session_state.scroll_to_bottom = st.session_state.last_message  # Trigger scroll
+    
+    # Rerun the app to update the conversation history and clear the input box
+    st.experimental_rerun()
