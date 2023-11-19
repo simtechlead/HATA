@@ -7,6 +7,12 @@ from openai import OpenAI
 st.set_page_config(page_title="Hata")
 st.title('Penerjemah Indonesia Simalungun')
 
+# Add user guide
+st.info("""
+    **Instruksi Penggunaan:**
+    Masukkan kata dalam bahasa Indonesia yang ingin Anda terjemahkan ke bahasa Simalungun di kotak di bawah ini.
+""")
+
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
     try:
