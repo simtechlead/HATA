@@ -3,61 +3,6 @@ import os
 import time
 from openai import OpenAI
 
-# Set up the page configuration with a custom primary color
-st.set_page_config(page_title="Penerjemah Indonesia Simalungun", page_icon=":book:")
-
-# Define a color theme
-primary_color = "#6c5ce7"  # A vibrant shade of purple
-background_color = "#ffffff"  # A clean white background
-text_color = "#333333"  # A dark gray for text that ensures good readability
-button_color = "#1e88e5"  # A cheerful blue for buttons
-info_color = "#e1bee7"  # A light purple for info messages
-
-# Inject custom CSS with st.markdown
-custom_css = f"""
-<style>
-    /* Main interface colors */
-    :root {{
-        --primary: {primary_color};
-        --btn-primary-bg: {button_color};
-        --info-background: {info_color};
-    }}
-
-    /* Background color for the main content area */
-    .stApp {{
-        background-color: {background_color};
-    }}
-
-    /* Streamlit's native elements and widgets colors */
-    .st-bb {{
-        background-color: var(--btn-primary-bg);
-        border-color: var(--btn-primary-bg);
-    }}
-    
-    .st-at {{
-        background-color: var(--info-background);
-    }}
-
-    /* Button colors */
-    button.primary {{
-        background-color: var(--btn-primary-bg);
-        border-color: var(--btn-primary-bg);
-    }}
-
-    /* Info color */
-    .stAlert {{
-        background-color: var(--info-background);
-    }}
-
-    /* Text color */
-    body {{
-        color: {text_color};
-    }}
-</style>
-"""
-
-st.markdown(custom_css, unsafe_allow_html=True)
-
 # Set up the page configuration and title
 st.set_page_config(page_title="Hata")
 st.title('Penerjemah Indonesia Simalungun')
