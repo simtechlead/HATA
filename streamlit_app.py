@@ -10,7 +10,7 @@ st.title('Penerjemah Indonesia Simalungun')
 # Add user guide
 st.info("""
     **Instruksi Penggunaan:**
-    Masukkan kata dalam bahasa Indonesia yang ingin Anda terjemahkan ke bahasa Simalungun di kotak di bawah ini.
+    Masukkan kata dalam bahasa Indonesia yang ingin Anda terjemahkan ke bahasa Simalungun di kolom chat di bawah ini. contoh: kata belajar
 """)
 
 # Function to interact with OpenAI API
