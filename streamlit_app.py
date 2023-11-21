@@ -8,8 +8,8 @@ st.set_page_config(page_title="Hata")
 st.title('Penerjemah Indonesia Simalungun')
 
 # Add user guide
-st.info("""Masukkan kata indonesia, permintaan penjelasan, terjemahan lain atau contoh kalimat di kolom chat.
-Contoh: "kata pergi" / "Terjemahan lain pergi" / "contoh kalimat laho".
+st.info("""Masukkan kata indonesia, permintaan terjemahan lain atau contoh kalimat di kolom chat.
+Contoh: "kata pergi?" / "Terjemahan lain pergi?" / "Berikan semua terjemahan pergi" / "Berikan contoh kalimat laho".
     """)
 
 # Function to interact with OpenAI API
