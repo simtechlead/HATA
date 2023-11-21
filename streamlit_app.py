@@ -9,7 +9,7 @@ st.title('Penerjemah Indonesia Simalungun')
 
 # Add user guide
 st.info("""Masukkan kata indonesia, permintaan penjelasan, terjemahan lain atau contoh kalimat di kolom chat.
-Contoh: "kata Belajar" / "Terjemahan lain belajar" / "contoh kalimat marlajar".
+Contoh: "kata pergi" / "Terjemahan lain pergi" / "contoh kalimat laho".
     """)
 
 # Function to interact with OpenAI API
