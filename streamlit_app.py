@@ -8,7 +8,7 @@ st.set_page_config(page_title="Hata")
 st.title('Penerjemah Indonesia Simalungun')
 
 # Add user guide
-st.info("""Masukkan kata indonesia, permintaan terjemahan lain atau contoh kalimat di kolom chat.
+st.info("""Masukkan permintaan terjemahan atau perihal bahasa di kolom chat.
 Contoh: "Terjemahan pergi" / "Terjemahan lain pergi" / "Berikan semua terjemahan pergi" / "Berikan contoh kalimat laho".
     """)
 
