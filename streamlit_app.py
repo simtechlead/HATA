@@ -10,8 +10,8 @@ st.title('Penerjemah Indonesia Simalungun')
 # Add user guide
 st.info("""
     **Instruksi Penggunaan:**
-    Masukkan kata pada kolom chat di bawah. contoh: kata belajar / kata lintun
-""")
+    Masukkan kata indonesia pada kolom chat di bawah. contoh: "kata belajar". Jika kurang jelas, bisa ditanyakan lebih lanjut
+    """)
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
