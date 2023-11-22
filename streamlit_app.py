@@ -5,12 +5,10 @@ from openai import OpenAI
 
 # Set up the page configuration and title
 st.set_page_config(page_title="Hata")
-st.title('Penerjemah Indonesia Simalungun')
+st.title('Penerjemah Indonesia ke Simalungun')
 
 # Add user guide
-st.info("""Masukkan permintaan terjemahan atau perihal bahasa di kolom chat.
-Contoh: "Terjemahan pergi" / "Terjemahan lain pergi" / "Berikan semua terjemahan pergi" / "Berikan contoh kalimat laho".
-    """)
+st.info("""Masukkan kata di kolom chat. Contoh: "pergi" / "Terjemahan lain pergi"""")
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
