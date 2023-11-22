@@ -9,7 +9,7 @@ st.title('Penerjemah Indonesia-Simalungun')
 
 # Add user guide
 st.info("""Masukkan kata di kolom chat, Contoh: "pergi".
-Untuk penjelasan, "Jelaskan (kata)"  """)
+Untuk penjelasan, "Jelaskan -kata yang diinginkan-"  """)
 
 # Function to interact with OpenAI API
 def interact_with_openai(user_message):
